@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\BlogMVC",
+    "\\BlogMVC\\Content",
+    "\\BlogMVC\\Views",
+    "\\BlogMVC\\Views\\Blog",
+    "\\BlogMVC\\Views\\Shared"
+  ],
+  "SelectedNode": "\\BlogMVC\\Views\\Blog\\Index.cshtml",
+  "PreviewInSolutionExplorer": false
+}

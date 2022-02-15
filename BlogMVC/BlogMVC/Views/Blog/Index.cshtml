@@ -1,0 +1,64 @@
+﻿@model BlogMVC.Models.ModelView.Blog.BlogTextModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Main -->
+<div id="main">
+
+    <!-- Posts -->
+    <section class="posts">
+
+
+        @foreach (var item in Model.texts)
+        {
+            <article>
+                <header>
+                    <span class="date">@item.CreatedDate</span>
+                    <h2>
+                        <a href="/Blog/Text/@item.ID">
+                            @item.Title
+                        </a>
+                    </h2>
+                </header>
+                <a href="#" class="image fit"><img src="~/Content/Blog/images/pic03.jpg" alt="" /></a>
+                <p>@item.Description</p>
+                <ul class="actions">
+                    <li><a href="/Blog/Text/@item.ID" class="button">Devamını Gör</a></li>
+                </ul>
+            </article>
+        }
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="pagination">
+
+            <a class="previous" href="/Blog/Page/@(Model.thisPage-1)">Geri</a>
+            <a class="page">@Model.thisPage</a>
+            <a class="page"><b>/</b></a>
+            <a>@Model.pageCount</a>
+            <a class="next" href="/Blog/Page/@(Model.thisPage+1)">İleri</a>
+        </div>
+    </footer>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var thisPage = @Model.thisPage;
+            var countPage = @Model.pageCount;
+
+            if (thisPage == 1) {
+                $('.previous').hide();
+            }
+            if (thisPage == countPage) {
+                $('.next').hide();
+            }
+        })
+    </script>
+
+}

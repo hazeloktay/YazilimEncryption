@@ -1,0 +1,143 @@
+﻿@model BlogMVC.Models.ModelView.IndexItemModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@if (Session["Username"] == null)
+{
+    HttpContext.Current.Response.Redirect("/Admin/Login");
+}
+else
+{
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row mt">
+                <div class="col-md-6">
+                    <div class="content-panel">
+
+                        <table class="table table-striped table-advance table-hover">
+                            <h4> <i class="fa fa-angle-right"></i> Son Yazılar</h4>
+                            <hr>
+                            <thead>
+                                <tr>
+                                    <th>Başlık</th>
+
+                                    <th>Kategori</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.texts)
+                                {
+                                    <tr>
+                                        <td>@item.Title</td>
+
+                                        <td>@item.tblCategories.Name </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-xs btnEdit" name="@item.ID"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-danger btn-xs btnDelete" name="@item.ID"><i class="fa fa-trash-o "></i></button>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div><!-- /content-panel -->
+                </div><!-- /col-md-6 -->
+                <div class="col-md-6">
+                    <div class="content-panel">
+
+                        <table class="table table-striped table-advance table-hover">
+                            <h4> <i class="fa fa-angle-right"></i> Yorumlar</h4>
+                            <hr>
+                            <thead>
+                                <tr>
+                                    <th>Yazının Adı</th>
+                                    <th>Yorum Yazan</th>
+                                    <th>Yorum</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.commets)
+                                {
+                                    <tr>
+                                        <td>@item.tblText.Title</td>
+
+                                        <td>@item.Commet </td>
+                                        <td>
+                                            <button class="btn btn-danger btn-xs btnDelete" name="@item.ID"><i class="fa fa-trash-o "></i></button>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div><!-- /content-panel -->
+                </div><!-- /col-md-6 -->
+            </div><!-- /row -->
+
+        </section><!--/wrapper -->
+    </section><!-- /MAIN CONTENT -->
+}
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $(".btnDelete").click(function () {
+
+                var ID = $(this).attr("name");
+                var closestTR = $(this).closest("tr");
+                $.ajax({
+                    url: '/Admin/RemoveText/' + ID,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+
+                        if (data == true) {
+                            $.alert({
+                                title: 'Başarılı!',
+                                content: 'Silme işlemi başarılı.',
+                                theme: 'modern',
+                                type: 'green',
+                                icon: 'fa fa-check'
+                            });
+
+                            closestTR.fadeOut(1000, function () {
+                                closestTR.remove();
+                            });
+
+                        } else {
+                            $.alert({
+                                title: 'Başarısız',
+                                content: 'Silme işlemi başarısız. Yetkiniz bulunmamakta...',
+                                theme: 'modern',
+                                type: 'red',
+                                icon: 'fa fa-check'
+                            });
+                        }
+
+                    },
+                    error: function (hata, ajaxOptions, thrownError) {
+                        alert(hata.status);
+                        alert(thrownError);
+                        alert(hata.responseText);
+                    }
+                });
+            });
+
+            $('.btnEdit').click(function () {
+                var ID = $(this).attr('name');
+
+                window.location('/Admin/EditText/' + ID);
+            })
+
+
+
+        })
+    </script>
+
+}

@@ -1,0 +1,46 @@
+﻿@{
+                /**/
+
+                ViewBag.Title = "AdminAdd";
+                Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="row">
+    <div class="col-lg-8 col-lg-8 col-sm-1" style="margin:200px; margin-left:300px; align-content:center">
+        <div class="showback">
+            <h3>Admin Ekle</h3>
+            @using (Html.BeginForm("AdminAdd", "Admin", FormMethod.Post, new { @class = "form-horizontal style-form" }))
+            {
+
+                @Html.TextBox("name", "", new { @class = "form-control", @placeholder = "Ad Soyad" }); <br />
+                @Html.TextBox("username", "", new { @class = "form-control", @placeholder = "Kullanıcı Adı Giriniz" }); <br />
+                @Html.Password("password", "", new { @class = "form-control", @placeholder = "Şifre Giriniz" }); <br />
+                @Html.DropDownList("status",
+                                  new List<SelectListItem>
+                                  {
+                    new SelectListItem
+                    {
+                        Text="Yazar",
+                        Value="1",
+                    },
+                    new SelectListItem
+                    {
+                        Text="Editör",
+                        Value="2",
+                    },
+                    new SelectListItem
+                    {
+                        Text="Admin",
+                        Value="3",
+                    },
+                                  }, "Statü seçiniz", new { @class = "form-control" }
+                  );
+                <br />
+                <button class="btn btn-success btn-block">EKLE</button><br /><br />
+                if (ViewBag.Success != null)
+                { <div class="alert alert-success">@ViewBag.Success</div>}
+            if (ViewBag.Error != null)
+            { <div class="alert alert-warning">@ViewBag.Error</div>}
+    }
+        </div>
+    </div>
+</div>

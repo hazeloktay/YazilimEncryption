@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BlogModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="tblAdmins">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="statusID" Type="Int32" />
+    <NavigationProperty Name="tblStatus" Relationship="Self.FK_tblAdmins_tblStatus" FromRole="tblAdmins" ToRole="tblStatus" />
+    <NavigationProperty Name="tblText" Relationship="Self.FK_tblText_tblAdmins" FromRole="tblAdmins" ToRole="tblText" />
+  </EntityType>
+  <EntityType Name="tblCategories">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblText" Relationship="Self.FK_tblText_tblCategories" FromRole="tblCategories" ToRole="tblText" />
+  </EntityType>
+  <EntityType Name="tblStatus">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblAdmins" Relationship="Self.FK_tblAdmins_tblStatus" FromRole="tblStatus" ToRole="tblAdmins" />
+  </EntityType>
+  <EntityType Name="tblText">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="adminID" Type="Int32" />
+    <Property Name="categoryID" Type="Int32" />
+    <NavigationProperty Name="tblAdmins" Relationship="Self.FK_tblText_tblAdmins" FromRole="tblText" ToRole="tblAdmins" />
+    <NavigationProperty Name="tblCategories" Relationship="Self.FK_tblText_tblCategories" FromRole="tblText" ToRole="tblCategories" />
+    <Property Name="created_date" Type="DateTime" Precision="0" />
+    <Property Name="update_date" Type="DateTime" Precision="0" />
+    <Property Name="updateAdminId" Type="Int32" />
+    <NavigationProperty Name="tblCommet" Relationship="BlogModel.FK_tblCommet_tblText" FromRole="tblText" ToRole="tblCommet" />
+  </EntityType>
+  <Association Name="FK_tblAdmins_tblStatus">
+    <End Role="tblStatus" Type="Self.tblStatus" Multiplicity="0..1" />
+    <End Role="tblAdmins" Type="Self.tblAdmins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblStatus">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblAdmins">
+        <PropertyRef Name="statusID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblText_tblAdmins">
+    <End Role="tblAdmins" Type="Self.tblAdmins" Multiplicity="0..1" />
+    <End Role="tblText" Type="Self.tblText" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblAdmins">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblText">
+        <PropertyRef Name="adminID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblText_tblCategories">
+    <End Role="tblCategories" Type="Self.tblCategories" Multiplicity="0..1" />
+    <End Role="tblText" Type="Self.tblText" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCategories">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblText">
+        <PropertyRef Name="categoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AygenErgenEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="tblAdmins" EntityType="Self.tblAdmins" />
+    <EntitySet Name="tblCategories" EntityType="Self.tblCategories" />
+    <EntitySet Name="tblStatus" EntityType="Self.tblStatus" />
+    <EntitySet Name="tblText" EntityType="Self.tblText" />
+    <AssociationSet Name="FK_tblAdmins_tblStatus" Association="Self.FK_tblAdmins_tblStatus">
+      <End Role="tblStatus" EntitySet="tblStatus" />
+      <End Role="tblAdmins" EntitySet="tblAdmins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblText_tblAdmins" Association="Self.FK_tblText_tblAdmins">
+      <End Role="tblAdmins" EntitySet="tblAdmins" />
+      <End Role="tblText" EntitySet="tblText" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblText_tblCategories" Association="Self.FK_tblText_tblCategories">
+      <End Role="tblCategories" EntitySet="tblCategories" />
+      <End Role="tblText" EntitySet="tblText" />
+    </AssociationSet>
+    <EntitySet Name="tblCommet" EntityType="BlogModel.tblCommet" />
+    <AssociationSet Name="FK_tblCommet_tblText" Association="BlogModel.FK_tblCommet_tblText">
+      <End Role="tblText" EntitySet="tblText" />
+      <End Role="tblCommet" EntitySet="tblCommet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="tblCommet">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="commet" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="textId" Type="Int32" />
+    <NavigationProperty Name="tblText" Relationship="BlogModel.FK_tblCommet_tblText" FromRole="tblCommet" ToRole="tblText" />
+  </EntityType>
+  <Association Name="FK_tblCommet_tblText">
+    <End Type="BlogModel.tblText" Role="tblText" Multiplicity="0..1" />
+    <End Type="BlogModel.tblCommet" Role="tblCommet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblText">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblCommet">
+        <PropertyRef Name="textId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

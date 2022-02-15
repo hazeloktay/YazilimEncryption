@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BlogModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="tblAdmins">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="50" />
+    <Property Name="username" Type="nvarchar" MaxLength="50" />
+    <Property Name="password" Type="nvarchar" MaxLength="50" />
+    <Property Name="statusID" Type="int" />
+  </EntityType>
+  <EntityType Name="tblCategories">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblCommet">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="commet" Type="nvarchar(max)" />
+    <Property Name="email" Type="nvarchar" MaxLength="100" />
+    <Property Name="name" Type="nvarchar" MaxLength="50" />
+    <Property Name="textId" Type="int" />
+  </EntityType>
+  <EntityType Name="tblStatus">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblText">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="title" Type="nvarchar" MaxLength="500" />
+    <Property Name="description" Type="nvarchar(max)" />
+    <Property Name="adminID" Type="int" />
+    <Property Name="categoryID" Type="int" />
+    <Property Name="created_date" Type="date" />
+    <Property Name="update_date" Type="date" />
+    <Property Name="updateAdminId" Type="int" />
+  </EntityType>
+  <Association Name="FK_tblAdmins_tblStatus">
+    <End Role="tblStatus" Type="Self.tblStatus" Multiplicity="0..1" />
+    <End Role="tblAdmins" Type="Self.tblAdmins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblStatus">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblAdmins">
+        <PropertyRef Name="statusID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblCommet_tblText">
+    <End Role="tblText" Type="Self.tblText" Multiplicity="0..1" />
+    <End Role="tblCommet" Type="Self.tblCommet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblText">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblCommet">
+        <PropertyRef Name="textId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblText_tblAdmins">
+    <End Role="tblAdmins" Type="Self.tblAdmins" Multiplicity="0..1" />
+    <End Role="tblText" Type="Self.tblText" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblAdmins">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblText">
+        <PropertyRef Name="adminID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblText_tblCategories">
+    <End Role="tblCategories" Type="Self.tblCategories" Multiplicity="0..1" />
+    <End Role="tblText" Type="Self.tblText" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCategories">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblText">
+        <PropertyRef Name="categoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BlogModelStoreContainer">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblAdmins" EntityType="Self.tblAdmins" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCategories" EntityType="Self.tblCategories" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCommet" EntityType="Self.tblCommet" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblStatus" EntityType="Self.tblStatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblText" EntityType="Self.tblText" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_tblAdmins_tblStatus" Association="Self.FK_tblAdmins_tblStatus">
+      <End Role="tblStatus" EntitySet="tblStatus" />
+      <End Role="tblAdmins" EntitySet="tblAdmins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblCommet_tblText" Association="Self.FK_tblCommet_tblText">
+      <End Role="tblText" EntitySet="tblText" />
+      <End Role="tblCommet" EntitySet="tblCommet" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblText_tblAdmins" Association="Self.FK_tblText_tblAdmins">
+      <End Role="tblAdmins" EntitySet="tblAdmins" />
+      <End Role="tblText" EntitySet="tblText" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblText_tblCategories" Association="Self.FK_tblText_tblCategories">
+      <End Role="tblCategories" EntitySet="tblCategories" />
+      <End Role="tblText" EntitySet="tblText" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

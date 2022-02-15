@@ -1,0 +1,123 @@
+﻿@model BlogMVC.Models.ModelView.Blog.BlogTextItemModel
+@{
+    ViewBag.Title = "Text";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    if (ViewBag.Error != null)
+    {
+        <div id="main">
+            <!-- Post -->
+            <section class="post">
+                <header class="major">
+                    <span class="date">April 25, 2017 | @Model.text.tblAdmins.Name</span>
+                    <h1>
+                        @Model.text.Title
+                    </h1>
+                </header>
+                <div class="image main"><img src="~/Content/Blog/images/pic01.jpg" alt="" /></div>
+                <p>@Model.text.Description</p>
+            </section>
+        </div>
+    }
+    else
+    {
+        <div>
+            <section>
+                <h2 style="color:white">Yorumlar</h2>
+                @if (Model.commets != null)
+                {
+                    <dl>
+
+                        @foreach (var item in Model.commets)
+                        {
+                            <dt style="color:aliceblue">@item.Name</dt>
+                            <dd style="color:aliceblue">
+                                <p>@item.Commet</p>
+                            </dd>
+                            <hr />
+
+                        }
+                    </dl>
+                }
+                else if (Model.commets == null)
+                {
+                    <p>Yorum yok.</p>
+                }
+            </section>
+        </div>
+        <div>
+            <section>
+                <h3 style="color:white">Yorum Yaz</h3>
+                <p style="color:white">(*)'lı alanların doldurulması zorunludur.</p>
+                <p id="result" style="color:red"></p>
+
+                <div class="row uniform">
+                    <div class="col-lg-3"  style="border-color:white">
+                        <input style="color:aliceblue"  type="text" name="name" id="name" value="" placeholder="Ad(*)" />
+                    </div>
+                    <div class="col-lg-3" style="border-color:white">
+                        <input style="color:aliceblue"  type="email" name="email" id="email" value="" placeholder="Email(*)" />
+                    </div>
+                    <div class="12u$"  style="border-color:white">
+                        <textarea style="color:aliceblue" name="commet" id="commet" placeholder="Yorum(*)" rows="6"></textarea>
+                    </div>
+                    <!-- Break -->
+                    <div class="12u$">
+                        <input type="submit" name="@Model.text.ID" value="Gönder" class="button special fit btnCommet" />
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+    }
+}
+@section scripts{
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".btnCommet").click(function () {
+
+                var ID = $(this).attr("name");
+
+                $.ajax({
+                    url: '/Blog/AddCommet/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'commet.textID': ID,
+                        'commet.name': $('#name').val(),
+                        'commet.email': $('#email').val(),
+                        'commet.commet': $('#commet').val(),
+
+                    },
+                    success: function (data) {
+                        if (data == true) {
+
+                            $.alert({
+                                title: 'Başarılı!',
+                                content: 'Yorum başarıyla eklendi',
+                                theme: 'modern',
+                                type: 'green',
+                                icon: 'fa fa-check'
+                            });
+                        } else {
+                            $('#result').text("Lütfen bütün alanları doldurun.");
+                        }
+                    },
+                    error: function (hata, ajaxOptions, thrownError) {
+                        alert(hata.status);
+                        alert(thrownError);
+                        alert(hata.responseText);
+                    }
+                });
+            });
+
+
+        });
+
+    </script>
+}
